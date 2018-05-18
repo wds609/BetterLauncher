@@ -44,6 +44,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
+import android.gesture.Gesture;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -137,6 +138,8 @@ import com.android.launcher3.widget.PendingAddWidgetInfo;
 import com.android.launcher3.widget.WidgetAddFlowHandler;
 import com.android.launcher3.widget.WidgetHostViewLoader;
 import com.android.launcher3.widget.WidgetsContainerView;
+import com.better.launcher.gesture.GestureHelper;
+import com.better.launcher.views.GestureView;
 
 
 import java.io.FileDescriptor;
@@ -159,7 +162,7 @@ public class Launcher extends BaseActivity
         implements LauncherExterns, View.OnClickListener, OnLongClickListener,
                    LauncherModel.Callbacks, View.OnTouchListener, LauncherProviderChangeListener,
                    AccessibilityManager.AccessibilityStateChangeListener,
-                   WallpaperColorInfo.OnThemeChangeListener {
+                   WallpaperColorInfo.OnThemeChangeListener, GestureView.GestureControler {
     public static final String TAG = "Launcher";
     static final boolean LOGD = false;
 
@@ -206,6 +209,11 @@ public class Launcher extends BaseActivity
     private static final String RUNTIME_STATE_PENDING_ACTIVITY_RESULT = "launcher.activity_result";
 
     static final String APPS_VIEW_SHOWN = "launcher.apps_view_shown";
+
+    @Override
+    public boolean isGesutreEnabled() {
+        return mWorkspace.getDragInfo() == null;
+    }
 
     /** The different states that Launcher can be in. */
     enum State { NONE, WORKSPACE, WORKSPACE_SPRING_LOADED, APPS, APPS_SPRING_LOADED,
@@ -379,6 +387,7 @@ public class Launcher extends BaseActivity
         super.onCreate(savedInstanceState);
 
         LauncherAppState app = LauncherAppState.getInstance(this);
+        GestureHelper.getInstance().init(this);
 
         // Load configuration-specific DeviceProfile
         mDeviceProfile = app.getInvariantDeviceProfile().getDeviceProfile(this);
@@ -1318,6 +1327,21 @@ public class Launcher extends BaseActivity
         if (TestingUtils.MEMORY_DUMP_ENABLED) {
             TestingUtils.addWeightWatcher(this);
         }
+        setupGesture();
+    }
+
+    private void setupGesture() {
+        GestureView svg = findViewById(R.id.gesture);
+        svg.setGestureControler(this);
+        svg.addOnGesturePerformedListener(new GestureView.OnGesturePerformedListener() {
+            @Override
+            public void onGesturePerformed(GestureView overlay, Gesture gesture) {
+                String result = GestureHelper.getInstance().recognize(gesture);
+                if (result != null) {
+                    startActivity(AppInfo.makeLaunchIntent(ComponentName.unflattenFromString(result)));
+                }
+            }
+        });
     }
 
     private void setupOverviewPanel() {

@@ -29,6 +29,7 @@ import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.util.Property;
 import android.util.SparseArray;
 
@@ -199,6 +200,7 @@ public class FastBitmapDrawable extends Drawable {
                 mBrightnessAnimator.setDuration(CLICK_FEEDBACK_DURATION);
                 mBrightnessAnimator.setInterpolator(CLICK_FEEDBACK_INTERPOLATOR);
                 mBrightnessAnimator.start();
+                Log.e("wds","onStateChange");
             } else {
                 setBrightness(getExpectedBrightness());
             }

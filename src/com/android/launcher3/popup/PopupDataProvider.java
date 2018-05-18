@@ -17,6 +17,7 @@
 package com.android.launcher3.popup;
 
 import android.content.ComponentName;
+import android.content.Intent;
 import android.service.notification.StatusBarNotification;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -32,6 +33,7 @@ import com.android.launcher3.shortcuts.DeepShortcutManager;
 import com.android.launcher3.util.ComponentKey;
 import com.android.launcher3.util.MultiHashMap;
 import com.android.launcher3.util.PackageUserKey;
+import com.better.launcher.gesture.GestureHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -253,6 +255,14 @@ public class PopupDataProvider implements NotificationListener.NotificationsChan
         for (SystemShortcut systemShortcut : SYSTEM_SHORTCUTS) {
             if (systemShortcut.getOnClickListener(mLauncher, info) != null) {
                 systemShortcuts.add(systemShortcut);
+            }
+        }
+        ComponentName componentName = info.getTargetComponent();
+        if (componentName != null) {
+            if (GestureHelper.getInstance().isAssignedGesture(componentName.flattenToShortString())) {
+                systemShortcuts.add(new SystemShortcut.ModifyGesture());
+            } else {
+                systemShortcuts.add(new SystemShortcut.CreatGesture());
             }
         }
         return systemShortcuts;

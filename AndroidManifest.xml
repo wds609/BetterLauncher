@@ -157,6 +157,10 @@
         <service android:name="com.android.launcher3.testing.MemoryTracker" />
 
         -->
+        <activity
+            android:name="com.better.launcher.activities.CreateGestureActivity"
+            android:screenOrientation="nosensor"
+            android:theme="@android:style/Theme.DeviceDefault.Light.NoActionBar"/>
 
     </application>
 </manifest>

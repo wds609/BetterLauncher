@@ -30,6 +30,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v4.graphics.ColorUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.Property;
 import android.util.TypedValue;
 import android.view.KeyEvent;
@@ -51,6 +52,7 @@ import com.android.launcher3.graphics.HolographicOutlineHelper;
 import com.android.launcher3.graphics.IconPalette;
 import com.android.launcher3.graphics.PreloadIconDrawable;
 import com.android.launcher3.model.PackageItemInfo;
+import com.better.launcher.gesture.GestureHelper;
 
 import java.text.NumberFormat;
 
@@ -370,6 +372,22 @@ public class BubbleTextView extends TextView implements ItemInfoUpdateReceiver {
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         drawBadgeIfNecessary(canvas);
+        drawGestureIfNecessary(canvas);
+    }
+
+    private void drawGestureIfNecessary(Canvas canvas) {
+        ItemInfo tagInfo = (ItemInfo) getTag();
+        if (tagInfo != null && tagInfo.getIntent() != null) {
+            Bitmap thumbnail = GestureHelper.getInstance().getGestureThumbnail(tagInfo.getTargetComponent());
+            if (thumbnail != null) {
+                final int scrollX = getScrollX();
+                final int scrollY = getScrollY();
+                Log.e("wds","dddddddddddd"+getWidth()+";"+thumbnail.getWidth()+mIconSize);
+                canvas.translate(scrollX, scrollY);
+                canvas.drawBitmap(thumbnail, getWidth() - thumbnail.getWidth() - getPaddingEnd(), getPaddingTop() + (int) (mIconSize * 0.), null);
+                canvas.translate(-scrollX, -scrollY);
+            }
+        }
     }
 
     /**

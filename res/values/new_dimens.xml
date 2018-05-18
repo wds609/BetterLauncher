@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <dimen name="gesture_shortcut_size">60dp</dimen>
+    <dimen name="gesture_icon_size">25dp</dimen>
+</resources>

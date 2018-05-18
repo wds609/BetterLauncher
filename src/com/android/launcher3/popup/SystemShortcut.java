@@ -1,6 +1,7 @@
 package com.android.launcher3.popup;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import com.android.launcher3.R;
 import com.android.launcher3.model.WidgetItem;
 import com.android.launcher3.util.PackageUserKey;
 import com.android.launcher3.widget.WidgetsBottomSheet;
+import com.better.launcher.activities.CreateGestureActivity;
 
 import java.util.List;
 
@@ -91,6 +93,40 @@ public abstract class SystemShortcut extends ItemInfo {
                     InfoDropTarget.startDetailsActivityForInfo(itemInfo, launcher, null, sourceBounds, opts);
                     launcher.getUserEventDispatcher().logActionOnControl(Action.Touch.TAP,
                             ControlType.APPINFO_TARGET, view);
+                }
+            };
+        }
+    }
+
+    public static class CreatGesture extends SystemShortcut {
+        public CreatGesture() {
+            super(R.drawable.ic_gesture, R.string.create_new_gesture);
+        }
+
+        @Override
+        public View.OnClickListener getOnClickListener(final Launcher launcher,
+                                                       final ItemInfo itemInfo) {
+            return new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    CreateGestureActivity.launchCreateGestureActivity(launcher, itemInfo.getTargetComponent().flattenToShortString(), false);
+                }
+            };
+        }
+    }
+
+    public static class ModifyGesture extends SystemShortcut {
+        public ModifyGesture() {
+            super(R.drawable.ic_gesture, R.string.modify_gesture);
+        }
+
+        @Override
+        public View.OnClickListener getOnClickListener(final Launcher launcher,
+                                                       final ItemInfo itemInfo) {
+            return new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    CreateGestureActivity.launchCreateGestureActivity(launcher, itemInfo.getTargetComponent().flattenToShortString(), true);
                 }
             };
         }

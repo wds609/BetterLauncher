@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="button_done">Done</string>
+    <string name="button_reset">Reset</string>
+    <string name="create_new_gesture">Create a new gesture for launch this app</string>
+    <string name="modify_gesture">Modify the gesture</string>
+</resources>
